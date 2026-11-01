@@ -1,0 +1,34 @@
+{
+  "type": "default",
+  "id": "Form_OrderManualVerification",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "components": [
+    {
+      "type": "select",
+      "key": "verificationDecision",
+      "label": "Verification decision",
+      "values": [
+        {
+          "label": "Approve order",
+          "value": "Approved"
+        },
+        {
+          "label": "Reject order",
+          "value": "Rejected"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "key": "verificationComment",
+      "label": "Verification comment",
+      "validate": {
+        "required": true
+      }
+    }
+  ]
+}

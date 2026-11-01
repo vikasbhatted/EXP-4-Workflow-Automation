@@ -1,0 +1,86 @@
+{
+  "type": "default",
+  "id": "Form_OrderSubmission",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "components": [
+    {
+      "type": "textfield",
+      "key": "customerReference",
+      "label": "Customer reference",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "key": "productId",
+      "label": "Product ID",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "quantity",
+      "label": "Quantity",
+      "validate": {
+        "required": true,
+        "min": 1
+      }
+    },
+    {
+      "type": "select",
+      "key": "deliveryPreference",
+      "label": "Delivery preference",
+      "values": [
+        {
+          "label": "Standard",
+          "value": "Standard"
+        },
+        {
+          "label": "Express",
+          "value": "Express"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "customerCategory",
+      "label": "Customer category",
+      "values": [
+        {
+          "label": "Regular",
+          "value": "Regular"
+        },
+        {
+          "label": "Premium",
+          "value": "Premium"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "unitPrice",
+      "label": "Unit price (INR)",
+      "validate": {
+        "required": true,
+        "min": 1
+      }
+    },
+    {
+      "type": "textfield",
+      "key": "paymentToken",
+      "label": "Mock payment token (e.g. TEST-OK)",
+      "validate": {
+        "required": true
+      }
+    }
+  ]
+}

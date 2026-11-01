@@ -1,0 +1,6 @@
+Test ID,Scenario,Input summary,Expected route,Actual outcome,Status
+1,Stock available and payment succeeds,"Product ITEM-01; quantity 2; unit price 6000; token TEST-OK",Validate > inventory available > DMN priority > payment SUCCESS > fulfilment end,Fill after execution,Pending
+2,Stock insufficient,"Product ITEM-LOW; quantity 5; unit price 1000",Inventory worker sets stockAvailable=false > cannot proceed to fulfilment,Fill after execution,Pending
+3,Payment declined,"Product ITEM-01; quantity 1; unit price 5000; token TEST-DECLINED",Payment response DECLINED > order not fulfilled,Fill after execution,Pending
+4,High-value order manual verification,"Product ITEM-01; quantity 10; unit price 6000",High-value condition > Tasklist manual verification,Fill after execution,Pending
+5,Payment service failure and recovery,"Valid order; mock API returns HTTP 503",Inspect connector incident in Operate; restore service and retry,Fill after execution,Pending

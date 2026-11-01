@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_Order" name="Order Priority" namespace="http://camunda.io/lab2">
+ <decision id="Decision_OrderPriority" name="Order Priority">
+  <decisionTable id="DecisionTable_OrderPriority" hitPolicy="FIRST">
+   <input id="IValue" label="Order value"><inputExpression id="EValue" typeRef="number"><text>orderTotal</text></inputExpression></input>
+   <input id="ICustomer" label="Customer category"><inputExpression id="ECustomer" typeRef="string"><text>customerCategory</text></inputExpression></input>
+   <input id="IDelivery" label="Delivery preference"><inputExpression id="EDelivery" typeRef="string"><text>deliveryPreference</text></inputExpression></input>
+   <output id="OPriority" name="deliveryPriority" typeRef="string"/>
+   <rule id="R1"><inputEntry id="R1a"><text>&gt;= 0</text></inputEntry><inputEntry id="R1b"><text>"Premium"</text></inputEntry><inputEntry id="R1c"><text>"Express"</text></inputEntry><outputEntry id="R1o"><text>"High"</text></outputEntry></rule>
+   <rule id="R2"><inputEntry id="R2a"><text>&gt;= 50000</text></inputEntry><inputEntry id="R2b"><text>-</text></inputEntry><inputEntry id="R2c"><text>-</text></inputEntry><outputEntry id="R2o"><text>"High"</text></outputEntry></rule>
+   <rule id="R3"><inputEntry id="R3a"><text>&lt; 50000</text></inputEntry><inputEntry id="R3b"><text>-</text></inputEntry><inputEntry id="R3c"><text>"Express"</text></inputEntry><outputEntry id="R3o"><text>"High"</text></outputEntry></rule>
+   <rule id="R4"><inputEntry id="R4a"><text>&lt; 50000</text></inputEntry><inputEntry id="R4b"><text>-</text></inputEntry><inputEntry id="R4c"><text>"Standard"</text></inputEntry><outputEntry id="R4o"><text>"Standard"</text></outputEntry></rule>
+  </decisionTable>
+ </decision>
+ <dmndi:DMNDI><dmndi:DMNDiagram id="DMNDiagram_Order"><dmndi:DMNShape id="DMNShape_Order" dmnElementRef="Decision_OrderPriority"><dc:Bounds x="150" y="80" width="180" height="80"/></dmndi:DMNShape></dmndi:DMNDiagram></dmndi:DMNDI>
+</definitions>
