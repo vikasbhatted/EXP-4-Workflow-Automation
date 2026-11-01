@@ -61,6 +61,3 @@ Develops a hospital appointment workflow that validates synthetic patient detail
 - Screenshots are captured from the actual implementation.
 - Test results are documented after workflow execution.
 
-## Author
-
-B.Tech – Computer Science and Engineering
