@@ -1,0 +1,6 @@
+Test ID,Scenario,Input summary,Expected route,Actual outcome,Status
+1,Meets approval criteria,"Income 60000; amount 900000; score 720; debt 10000",Validate > Credit REST API > DMN Approved > end,Fill after execution,Pending
+2,Fails eligibility criteria,"Income 12000; amount 300000; score 720; debt 1000",DMN Rejected > end,Fill after execution,Pending
+3,Requires manual review,"Income 50000; amount 1000000; score 620; debt 10000",DMN Manual Review > Tasklist > reviewer outcome > end,Fill after execution,Pending
+4,Credit API error or timeout,"Valid application; mock service returns HTTP 503",Inspect connector incident in Operate; restore service and retry,Fill after execution,Pending
+5,Worker failure and recovery,"Temporarily stop worker; restart it after diagnosis",Inspect worker job incident; correct/restart worker and retry,Fill after execution,Pending

@@ -1,0 +1,34 @@
+{
+  "type": "default",
+  "id": "Form_ManualLoanReview",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "components": [
+    {
+      "type": "select",
+      "key": "reviewOutcome",
+      "label": "Review outcome",
+      "values": [
+        {
+          "label": "Approve",
+          "value": "Approved"
+        },
+        {
+          "label": "Reject",
+          "value": "Rejected"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "key": "reviewComment",
+      "label": "Reviewer comment",
+      "validate": {
+        "required": true
+      }
+    }
+  ]
+}

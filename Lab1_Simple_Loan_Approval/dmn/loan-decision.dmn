@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_Loan" name="Loan Decision" namespace="http://camunda.io/lab1">
+  <decision id="Decision_LoanEligibility" name="Loan Eligibility">
+    <decisionTable id="DecisionTable_LoanEligibility" hitPolicy="FIRST">
+      <input id="Input_Income" label="Monthly income"><inputExpression id="Expr_Income" typeRef="number"><text>monthlyIncome</text></inputExpression></input>
+      <input id="Input_Multiple" label="Loan-to-income multiple"><inputExpression id="Expr_Multiple" typeRef="number"><text>loanToIncomeMultiple</text></inputExpression></input>
+      <input id="Input_Score" label="Credit score"><inputExpression id="Expr_Score" typeRef="number"><text>creditScore</text></inputExpression></input>
+      <input id="Input_DebtRatio" label="Debt-to-income ratio"><inputExpression id="Expr_DebtRatio" typeRef="number"><text>debtToIncomeRatio</text></inputExpression></input>
+      <output id="Output_Decision" name="decision" typeRef="string"/>
+      <rule id="Rule_RejectIncome"><inputEntry id="R1I1"><text>&lt; 15000</text></inputEntry><inputEntry id="R1I2"><text>-</text></inputEntry><inputEntry id="R1I3"><text>-</text></inputEntry><inputEntry id="R1I4"><text>-</text></inputEntry><outputEntry id="R1O"><text>"Rejected"</text></outputEntry></rule>
+      <rule id="Rule_RejectMultiple"><inputEntry id="R2I1"><text>&gt;= 15000</text></inputEntry><inputEntry id="R2I2"><text>&gt; 60</text></inputEntry><inputEntry id="R2I3"><text>-</text></inputEntry><inputEntry id="R2I4"><text>-</text></inputEntry><outputEntry id="R2O"><text>"Rejected"</text></outputEntry></rule>
+      <rule id="Rule_ManualScore"><inputEntry id="R3I1"><text>&gt;= 15000</text></inputEntry><inputEntry id="R3I2"><text>&lt;= 60</text></inputEntry><inputEntry id="R3I3"><text>&lt; 650</text></inputEntry><inputEntry id="R3I4"><text>-</text></inputEntry><outputEntry id="R3O"><text>"Manual Review"</text></outputEntry></rule>
+      <rule id="Rule_ManualDebt"><inputEntry id="R4I1"><text>&gt;= 15000</text></inputEntry><inputEntry id="R4I2"><text>&lt;= 60</text></inputEntry><inputEntry id="R4I3"><text>&gt;= 650</text></inputEntry><inputEntry id="R4I4"><text>&gt; 0.40</text></inputEntry><outputEntry id="R4O"><text>"Manual Review"</text></outputEntry></rule>
+      <rule id="Rule_Approve"><inputEntry id="R5I1"><text>&gt;= 15000</text></inputEntry><inputEntry id="R5I2"><text>&lt;= 60</text></inputEntry><inputEntry id="R5I3"><text>&gt;= 650</text></inputEntry><inputEntry id="R5I4"><text>&lt;= 0.40</text></inputEntry><outputEntry id="R5O"><text>"Approved"</text></outputEntry></rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI><dmndi:DMNDiagram id="DMNDiagram_Loan"><dmndi:DMNShape id="DMNShape_Decision" dmnElementRef="Decision_LoanEligibility"><dc:Bounds x="160" y="80" width="180" height="80"/></dmndi:DMNShape></dmndi:DMNDiagram></dmndi:DMNDI>
+</definitions>
