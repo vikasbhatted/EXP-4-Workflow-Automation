@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="Definitions_Triage" name="Patient Triage" namespace="http://example.com/hospital">
+ <decision id="Decision_PatientTriage" name="Patient Triage Classification">
+  <decisionTable id="DecisionTable_Triage" hitPolicy="FIRST">
+   <input id="Input_Urgent" label="urgentIndicator"><inputExpression id="InputExpression_Urgent" typeRef="boolean"><text>urgentIndicator</text></inputExpression></input>
+   <input id="Input_Priority" label="priorityIndicator"><inputExpression id="InputExpression_Priority" typeRef="boolean"><text>priorityIndicator</text></inputExpression></input>
+   <output id="Output_Category" name="urgencyCategory" typeRef="string"/>
+   <rule id="Rule_Urgent"><inputEntry id="U1"><text>true</text></inputEntry><inputEntry id="U2"><text>-</text></inputEntry><outputEntry id="UO"><text>"Urgent Assessment"</text></outputEntry></rule>
+   <rule id="Rule_Priority"><inputEntry id="P1"><text>false</text></inputEntry><inputEntry id="P2"><text>true</text></inputEntry><outputEntry id="PO"><text>"Priority Review"</text></outputEntry></rule>
+   <rule id="Rule_Routine"><inputEntry id="R1"><text>-</text></inputEntry><inputEntry id="R2"><text>-</text></inputEntry><outputEntry id="RO"><text>"Routine"</text></outputEntry></rule>
+  </decisionTable>
+ </decision>
+ <dmndi:DMNDI><dmndi:DMNDiagram id="DMNDiagram_Triage"><dmndi:DMNShape id="DMNShape_Triage" dmnElementRef="Decision_PatientTriage"><dc:Bounds x="160" y="80" width="320" height="210"/></dmndi:DMNShape></dmndi:DMNDiagram></dmndi:DMNDI>
+</definitions>

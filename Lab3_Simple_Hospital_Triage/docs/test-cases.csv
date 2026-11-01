@@ -1,0 +1,6 @@
+Test ID,Input summary,Expected route,Actual result,Status
+T1,Routine patient; slot available,DMN Routine -> availability -> booking,To be filled after execution,Not run
+T2,Priority indicator true,DMN Priority Review -> availability / staff workflow,To be filled after execution,Not run
+T3,Urgent indicator true,DMN Urgent Assessment -> immediate staff task,To be filled after execution,Not run
+T4,Patient reference ending -NOSLOT,No slot -> staff review,To be filled after execution,Not run
+T5,simulateFailure true,API 503 -> incident -> restore API and retry,To be filled after execution,Not run

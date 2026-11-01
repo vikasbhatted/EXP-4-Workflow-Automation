@@ -1,0 +1,14 @@
+{
+  "components": [
+    {"type":"textfield","key":"patientReference","label":"Synthetic patient reference","validate":{"required":true}},
+    {"type":"textfield","key":"appointmentPreference","label":"Preferred appointment date/time (text)","validate":{"required":true}},
+    {"type":"textarea","key":"symptomsSummary","label":"Symptoms summary (educational test text)","validate":{"required":true}},
+    {"type":"checkbox","key":"urgentIndicator","label":"Urgent indicator (synthetic test only)"},
+    {"type":"checkbox","key":"priorityIndicator","label":"Priority review indicator"},
+    {"type":"textfield","key":"simulateNoSlots","label":"Enter YES to simulate no available slots"},
+    {"type":"textfield","key":"simulateFailure","label":"Enter YES to simulate scheduling API failure"}
+  ],
+  "type":"default",
+  "id":"patient-registration",
+  "schemaVersion":1
+}

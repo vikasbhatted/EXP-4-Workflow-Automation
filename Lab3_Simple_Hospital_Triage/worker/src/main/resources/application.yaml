@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: hospital-triage-worker
+camunda:
+  client:
+    mode: self-managed
+    zeebe:
+      grpc-address: http://localhost:26500
+      rest-address: http://localhost:8080
+server:
+  port: 8091
+hospital:
+  scheduling-api: http://localhost:8083

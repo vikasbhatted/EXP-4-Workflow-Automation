@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_Hospital" targetNamespace="http://example.com/hospital" exporter="Camunda Modeler" exporterVersion="5.49.0">
+  <bpmn:process id="Process_HospitalAppointment" name="Hospital Appointment and Patient Triage" isExecutable="true">
+    <bpmn:startEvent id="StartEvent" name="Patient request received">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="patient-registration" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="ValidateRegistration" name="Validate patient registration">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="validate-registration" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="RegistrationGateway" name="Registration valid?">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="InvalidEnd" name="Request incomplete">
+      <bpmn:incoming>F4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:businessRuleTask id="TriageDecision" name="Classify request (DMN)">
+      <bpmn:extensionElements>
+        <zeebe:calledDecision decisionId="Decision_PatientTriage" resultVariable="triageResult" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="TriageGateway" name="Triage category?">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+      <bpmn:outgoing>F7</bpmn:outgoing>
+      <bpmn:outgoing>F8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="UrgentAssessment" name="Immediate staff assessment">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="staff-triage-review" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F6</bpmn:incoming>
+      <bpmn:outgoing>F9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PriorityReview" name="Priority staff review">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="staff-triage-review" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F7</bpmn:incoming>
+      <bpmn:outgoing>F10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="CheckAvailability" name="Request appointment availability">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="check-appointment-availability" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F8</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="AvailabilityGateway" name="Suitable slot available?">
+      <bpmn:incoming>F11</bpmn:incoming>
+      <bpmn:outgoing>F12</bpmn:outgoing>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="NoSlotReview" name="Staff review – no suitable slot">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="staff-triage-review" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:outgoing>F14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="RecordBooking" name="Record appointment booking">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="record-appointment-booking" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F15</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="BookedEnd" name="Appointment booked">
+      <bpmn:incoming>F15</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="StaffEnd" name="Staff assessment / follow-up">
+      <bpmn:incoming>F9</bpmn:incoming>
+      <bpmn:incoming>F10</bpmn:incoming>
+      <bpmn:incoming>F14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" sourceRef="StartEvent" targetRef="ValidateRegistration" />
+    <bpmn:sequenceFlow id="F2" sourceRef="ValidateRegistration" targetRef="RegistrationGateway" />
+    <bpmn:sequenceFlow id="F3" name="Yes" sourceRef="RegistrationGateway" targetRef="TriageDecision">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= registrationValid = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F4" name="No" sourceRef="RegistrationGateway" targetRef="InvalidEnd">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= registrationValid = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F5" sourceRef="TriageDecision" targetRef="TriageGateway" />
+    <bpmn:sequenceFlow id="F6" name="Urgent Assessment" sourceRef="TriageGateway" targetRef="UrgentAssessment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= triageResult.urgencyCategory = "Urgent Assessment"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F7" name="Priority Review" sourceRef="TriageGateway" targetRef="PriorityReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= triageResult.urgencyCategory = "Priority Review"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F8" name="Routine" sourceRef="TriageGateway" targetRef="CheckAvailability">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= triageResult.urgencyCategory = "Routine"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F9" sourceRef="UrgentAssessment" targetRef="StaffEnd" />
+    <bpmn:sequenceFlow id="F10" sourceRef="PriorityReview" targetRef="StaffEnd" />
+    <bpmn:sequenceFlow id="F11" sourceRef="CheckAvailability" targetRef="AvailabilityGateway" />
+    <bpmn:sequenceFlow id="F12" name="Slot available" sourceRef="AvailabilityGateway" targetRef="RecordBooking">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= slotAvailable = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F13" name="No suitable slot" sourceRef="AvailabilityGateway" targetRef="NoSlotReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= slotAvailable = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F14" sourceRef="NoSlotReview" targetRef="StaffEnd" />
+    <bpmn:sequenceFlow id="F15" sourceRef="RecordBooking" targetRef="BookedEnd" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_Hospital">
+    <bpmndi:BPMNPlane id="Plane_Hospital" bpmnElement="Process_HospitalAppointment">
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="170" y="220" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="151" y="256" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidateRegistration_di" bpmnElement="ValidateRegistration">
+        <dc:Bounds x="250" y="198" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RegistrationGateway_di" bpmnElement="RegistrationGateway" isMarkerVisible="true">
+        <dc:Bounds x="430" y="213" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="425" y="175.5" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InvalidEnd_di" bpmnElement="InvalidEnd">
+        <dc:Bounds x="510" y="360" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="501" y="396" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TriageDecision_di" bpmnElement="TriageDecision">
+        <dc:Bounds x="540" y="198" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TriageGateway_di" bpmnElement="TriageGateway" isMarkerVisible="true">
+        <dc:Bounds x="740" y="213" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="688" y="263" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UrgentAssessment_di" bpmnElement="UrgentAssessment">
+        <dc:Bounds x="880" y="45" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PriorityReview_di" bpmnElement="PriorityReview">
+        <dc:Bounds x="880" y="390" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckAvailability_di" bpmnElement="CheckAvailability">
+        <dc:Bounds x="880" y="198" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AvailabilityGateway_di" bpmnElement="AvailabilityGateway" isMarkerVisible="true">
+        <dc:Bounds x="1120" y="213" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1115" y="175.5" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RecordBooking_di" bpmnElement="RecordBooking">
+        <dc:Bounds x="1250" y="198" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BookedEnd_di" bpmnElement="BookedEnd">
+        <dc:Bounds x="1500" y="220" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1487" y="256" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NoSlotReview_di" bpmnElement="NoSlotReview">
+        <dc:Bounds x="1235" y="300" width="190" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StaffEnd_di" bpmnElement="StaffEnd">
+        <dc:Bounds x="1622" y="322" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1667.5" y="326" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1">
+        <di:waypoint x="206" y="238" />
+        <di:waypoint x="250" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2">
+        <di:waypoint x="380" y="238" />
+        <di:waypoint x="430" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3">
+        <di:waypoint x="480" y="238" />
+        <di:waypoint x="540" y="238" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="501" y="213" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
+        <di:waypoint x="456" y="262" />
+        <di:waypoint x="455" y="378" />
+        <di:waypoint x="510" y="378" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="432" y="310" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
+        <di:waypoint x="680" y="238" />
+        <di:waypoint x="740" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6">
+        <di:waypoint x="765" y="213" />
+        <di:waypoint x="765" y="85" />
+        <di:waypoint x="880" y="85" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="790" y="106" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7">
+        <di:waypoint x="765" y="263" />
+        <di:waypoint x="765" y="430" />
+        <di:waypoint x="880" y="430" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="783" y="403" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8">
+        <di:waypoint x="790" y="238" />
+        <di:waypoint x="880" y="238" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="816" y="213" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
+        <di:waypoint x="1050" y="85" />
+        <di:waypoint x="1640" y="85" />
+        <di:waypoint x="1640" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="1050" y="430" />
+        <di:waypoint x="1640" y="430" />
+        <di:waypoint x="1640" y="358" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="1050" y="238" />
+        <di:waypoint x="1120" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+        <di:waypoint x="1170" y="238" />
+        <di:waypoint x="1250" y="238" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1177" y="213" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+        <di:waypoint x="1145" y="263" />
+        <di:waypoint x="1145" y="340" />
+        <di:waypoint x="1235" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1152" y="315" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+        <di:waypoint x="1425" y="341" />
+        <di:waypoint x="1622" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="1420" y="238" />
+        <di:waypoint x="1500" y="238" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

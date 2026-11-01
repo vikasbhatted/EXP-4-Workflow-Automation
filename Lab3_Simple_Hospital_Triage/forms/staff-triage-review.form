@@ -1,0 +1,9 @@
+{
+  "components": [
+    {"type":"textfield","key":"staffDecision","label":"Staff decision (Assessed / Follow-up required)","validate":{"required":true}},
+    {"type":"textarea","key":"staffComment","label":"Staff notes (synthetic case only)"}
+  ],
+  "type":"default",
+  "id":"staff-triage-review",
+  "schemaVersion":1
+}
