@@ -125,13 +125,6 @@ They include:
 - DMN priority decision table
 - Order submission form
 - Manual verification form
-- Deployment evidence
-- Successful order execution
-- Insufficient stock scenario
-- Payment declined scenario
-- Tasklist manual verification
-- Operate monitoring
-- Incident recovery
 
 ## 10. Limitations
 
