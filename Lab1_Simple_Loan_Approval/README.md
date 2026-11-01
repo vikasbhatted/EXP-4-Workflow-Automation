@@ -104,12 +104,8 @@ They include:
 
 - BPMN process diagram
 - DMN decision table
-- Application forms
-- Deployment evidence
-- Workflow execution
-- Tasklist manual review
-- Operate monitoring
-- Incident recovery
+- Application form
+- Manual review form
 
 ## 10. Limitations
 
